@@ -1,0 +1,870 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+<title>The Missing December Star | First AR Mission</title>
+
+<script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font: 16px/1.5 system-ui, sans-serif;
+  color: white;
+  background: transparent;
+}
+
+a-scene {
+  position: fixed !important;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+button, input {
+  font: inherit;
+}
+
+button, .link {
+  display: inline-block;
+  border: 0;
+  border-radius: 12px;
+  padding: 12px 18px;
+  background: #ffd36d;
+  color: #10152e;
+  font-weight: 750;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+button:disabled {
+  opacity: .45;
+  cursor: default;
+}
+
+.secondary {
+  background: #ffffff15;
+  border: 1px solid #ffffff40;
+  color: white;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  overflow: auto;
+  padding: 30px 20px;
+  background: radial-gradient(
+    ellipse at top,
+    #473566,
+    #10152e 75%
+  );
+  display: grid;
+  place-items: center;
+}
+
+.intro {
+  width: 100%;
+  max-width: 540px;
+}
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #ffd36d;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: clamp(38px, 9vw, 58px);
+  line-height: 1.05;
+  letter-spacing: -2px;
+  margin: 15px 0;
+}
+
+h1 em {
+  color: #ff86ad;
+  font-style: normal;
+}
+
+p {
+  color: #d2d7ed;
+}
+
+.steps {
+  background: #ffffff09;
+  border: 1px solid #ffffff25;
+  border-radius: 16px;
+  padding: 18px;
+  margin: 20px 0;
+}
+
+.steps ol {
+  padding-left: 22px;
+}
+
+.steps li {
+  padding-bottom: 8px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.note {
+  font-size: 13px;
+  color: #bfc8e0;
+}
+
+.status {
+  min-height: 24px;
+  color: #ffd36d;
+}
+
+.top {
+  position: fixed;
+  z-index: 20;
+  top: max(12px, env(safe-area-inset-top));
+  left: 12px;
+  right: 12px;
+  background: #10152eea;
+  border: 1px solid #ffffff30;
+  border-radius: 14px;
+  padding: 12px 15px;
+  pointer-events: none;
+}
+
+.top strong {
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #ffd36d;
+}
+
+.top p {
+  margin: 3px 0;
+  font-size: 14px;
+}
+
+.bottom {
+  position: fixed;
+  z-index: 21;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  left: 12px;
+  right: 12px;
+  max-height: 64vh;
+  overflow: auto;
+  border: 1px solid #ffffff30;
+  border-radius: 18px;
+  padding: 18px;
+  background: #10152ef2;
+}
+
+.bottom h2 {
+  margin: 4px 0 8px;
+  font-size: 23px;
+}
+
+.bottom p {
+  margin: 7px 0;
+  font-size: 14px;
+}
+
+.code {
+  letter-spacing: 7px;
+  font-weight: 800;
+  font-size: 28px;
+  color: #ffd36d;
+  margin: 12px 0;
+}
+
+input {
+  background: #080e24;
+  border: 1px solid #7b81a2;
+  border-radius: 9px;
+  padding: 12px;
+  color: white;
+  width: 100%;
+  margin: 8px 0 12px;
+}
+
+label {
+  font-size: 13px;
+}
+
+.top, .bottom {
+  max-width: 620px;
+  margin-inline: auto;
+}
+
+#celebration {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 24;
+}
+
+#celebration i {
+  position: absolute;
+  color: #ffd36d;
+  font-size: 25px;
+  animation: fall 2.8s linear forwards;
+}
+
+@keyframes fall {
+  from {
+    transform: translateY(-40px) rotate(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100vh) rotate(330deg);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #celebration i {
+    animation: none;
+    display: none;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<section id="intro" class="overlay">
+  <div class="intro">
+    <div class="eyebrow">
+      Isolo Printx · AR field test 01 · Ages 12+
+    </div>
+
+    <h1>
+      The missing<br>
+      <em>December Star.</em>
+    </h1>
+
+    <p>
+      Find the crystal. Decode the transmission.
+      Earn your first restoration signal.
+    </p>
+
+    <div class="steps">
+      <strong>Before you start</strong>
+
+      <ol>
+        <li>
+          Open the sample target card on a second
+          screen, or print it.
+        </li>
+        <li>
+          Tap <b>Start camera</b> and allow camera access.
+        </li>
+        <li>
+          Point at the card, then tap
+          <b>Reveal the clue</b>.
+        </li>
+      </ol>
+
+      <a
+        class="link secondary"
+        target="_blank"
+        rel="noopener"
+        href="https://raw.githubusercontent.com/hiukim/mind-ar-js/master/examples/image-tracking/assets/card-example/card.png">
+        Open sample target ↗
+      </a>
+
+      <p class="note">
+        This test recognises the existing MindAR sample
+        card, not the December Star artwork.
+        If viewing the card on this phone, print it
+        or move it to another screen before starting.
+      </p>
+    </div>
+
+    <div class="actions">
+      <button id="start" disabled>
+        Loading AR engine…
+      </button>
+    </div>
+
+    <p id="startStatus" class="status" role="status">
+      Preparing the camera experience…
+    </p>
+
+    <p class="note">
+      Use an HTTPS website in Safari or Chrome.
+      Internet is needed for the libraries and target.
+      This page does not record or upload camera video.
+    </p>
+  </div>
+</section>
+
+<div id="hud" class="hidden">
+  <div class="top">
+    <strong>CASE 001 / CRYSTAL SIGNAL</strong>
+
+    <p id="tracking" role="status" aria-live="polite">
+      Searching for the sample target card…
+    </p>
+  </div>
+
+  <section class="bottom">
+    <div id="scanPanel">
+      <div class="eyebrow">Find the signal</div>
+
+      <h2>A crystal is waiting.</h2>
+
+      <p>
+        Keep the full card in view, in even light.
+        Move slowly until the crystal appears.
+      </p>
+
+      <button id="reveal" disabled>
+        Reveal the clue
+      </button>
+    </div>
+
+    <form id="challenge" class="hidden">
+      <div class="eyebrow">
+        Transmission intercepted
+      </div>
+
+      <h2>Where is the next crystal?</h2>
+
+      <p>
+        Every letter has moved one place forward in
+        the alphabet. Move each letter <b>back one</b>
+        to reveal the destination.
+      </p>
+
+      <div class="code">Q B S L</div>
+
+      <label for="answer">Destination</label>
+
+      <input
+        id="answer"
+        autocomplete="off"
+        autocapitalize="characters"
+        maxlength="30"
+        placeholder="Enter the place">
+
+      <div class="actions">
+        <button type="submit">
+          Unlock the signal
+        </button>
+
+        <button
+          type="button"
+          id="hint"
+          class="secondary">
+          Hint
+        </button>
+      </div>
+
+      <p
+        id="feedback"
+        role="status"
+        aria-live="polite">
+      </p>
+    </form>
+
+    <div id="won" class="hidden">
+      <div class="eyebrow">
+        Crystal 01 restored
+      </div>
+
+      <h2>You found the signal.</h2>
+
+      <p>
+        The city sends a pulse of light.
+        Your first code digit is
+        <b style="color:#ffd36d;font-size:24px">7</b>.
+      </p>
+
+      <p>
+        Point back at the card to see your
+        golden reward crystal.
+      </p>
+
+      <button id="replay">
+        Replay this mission
+      </button>
+    </div>
+
+    <div style="margin-top:14px">
+      <button id="stop" class="secondary">
+        Close camera
+      </button>
+    </div>
+  </section>
+</div>
+
+<div id="celebration" aria-hidden="true"></div>
+
+<a-scene
+  id="scene"
+  mindar-image="
+    imageTargetSrc: https://raw.githubusercontent.com/hiukim/mind-ar-js/master/examples/image-tracking/assets/card-example/card.mind;
+    autoStart: false;
+    uiLoading: no;
+    uiScanning: no;
+    uiError: no;
+  "
+  color-space="sRGB"
+  renderer="
+    alpha: true;
+    antialias: true;
+    colorManagement: true
+  "
+  vr-mode-ui="enabled: false"
+  device-orientation-permission-ui="enabled: false"
+  embedded>
+
+  <a-camera
+    position="0 0 0"
+    look-controls="enabled: false">
+  </a-camera>
+
+  <a-entity
+    id="target"
+    mindar-image-target="targetIndex: 0">
+
+    <a-ring
+      color="#74e9ff"
+      radius-inner="0.31"
+      radius-outer="0.325"
+      side="double"
+      material="shader: flat; opacity: 0.85"
+      position="0 0 0.04"
+      animation="
+        property: rotation;
+        to: 0 0 360;
+        loop: true;
+        dur: 12000;
+        easing: linear">
+    </a-ring>
+
+    <a-entity
+      id="crystalRig"
+      position="0 0 0.22"
+      animation="
+        property: position;
+        from: 0 0 0.18;
+        to: 0 0.08 0.30;
+        dir: alternate;
+        loop: true;
+        dur: 1800;
+        easing: easeInOutSine">
+
+      <a-octahedron
+        id="crystal"
+        radius="0.22"
+        scale="0.8 1.4 0.8"
+        color="#66deff"
+        material="
+          metalness: 0.2;
+          roughness: 0.25;
+          emissive: #174d82;
+          emissiveIntensity: 0.8
+        "
+        animation="
+          property: rotation;
+          to: 0 360 0;
+          loop: true;
+          dur: 6500;
+          easing: linear">
+      </a-octahedron>
+
+      <a-octahedron
+        radius="0.255"
+        scale="0.8 1.4 0.8"
+        material="
+          color: #b8f3ff;
+          wireframe: true;
+          shader: flat
+        "
+        animation="
+          property: rotation;
+          to: 0 -360 0;
+          loop: true;
+          dur: 10000;
+          easing: linear">
+      </a-octahedron>
+    </a-entity>
+
+    <a-text
+      id="arTitle"
+      value="SIGNAL FOUND"
+      align="center"
+      color="#ffffff"
+      width="1.6"
+      position="0 -0.40 0.08">
+    </a-text>
+
+    <a-entity id="rewardStars" visible="false">
+      <a-text
+        value="*   *   *"
+        align="center"
+        color="#ffd36d"
+        width="2.8"
+        position="0 0.42 0.10"
+        animation="
+          property: scale;
+          from: 0.8 0.8 0.8;
+          to: 1.15 1.15 1.15;
+          dir: alternate;
+          loop: true;
+          dur: 800">
+      </a-text>
+    </a-entity>
+  </a-entity>
+
+  <a-entity
+    light="type: ambient; intensity: 1.1">
+  </a-entity>
+
+  <a-entity
+    light="type: directional; intensity: 1.6"
+    position="1 1 2">
+  </a-entity>
+</a-scene>
+
+<script>
+'use strict';
+
+const el = id => document.getElementById(id);
+
+const scene = el('scene');
+const target = el('target');
+
+let running = false;
+let starting = false;
+let found = false;
+let solved = false;
+let revealed = false;
+let system = null;
+let watchdog = null;
+
+function status(text) {
+  el('startStatus').textContent = text;
+}
+
+function ready() {
+  system = scene.systems &&
+    scene.systems['mindar-image-system'];
+
+  if (!system) {
+    status(
+      'AR engine could not load. Check your ' +
+      'internet connection and reload.'
+    );
+    return;
+  }
+
+  el('start').disabled = false;
+  el('start').textContent = 'Start camera';
+
+  status(
+    'Ready. Open the target on another screen ' +
+    'or print it.'
+  );
+}
+
+if (scene.hasLoaded) {
+  ready();
+} else {
+  scene.addEventListener('loaded', ready, {
+    once: true
+  });
+}
+
+setTimeout(() => {
+  if (!system) {
+    status(
+      'Still loading. Check that your connection ' +
+      'allows A-Frame and MindAR, then reload.'
+    );
+  }
+}, 20000);
+
+function halt() {
+  clearTimeout(watchdog);
+
+  running = false;
+  starting = false;
+  found = false;
+
+  el('reveal').disabled = true;
+
+  if (system) {
+    try {
+      system.stop();
+    } catch (error) {
+      console.warn('Camera shutdown:', error);
+    }
+  }
+
+  document.querySelectorAll('video').forEach(video => {
+    if (video.srcObject) {
+      video.srcObject.getTracks().forEach(track => {
+        track.stop();
+      });
+
+      video.srcObject = null;
+    }
+  });
+
+  el('hud').classList.add('hidden');
+  el('intro').classList.remove('hidden');
+
+  el('start').disabled = !system;
+  el('start').textContent = 'Start camera';
+}
+
+function fail(error) {
+  halt();
+
+  const name = error && error.name;
+
+  if (name === 'NotAllowedError') {
+    status(
+      'Camera permission was denied. Allow it ' +
+      'in your browser settings and try again.'
+    );
+  } else if (name === 'NotFoundError') {
+    status('No camera was found on this device.');
+  } else {
+    status(
+      'Camera or tracking could not start. ' +
+      'Use HTTPS in Safari or Chrome, check ' +
+      'permissions and your internet, then retry.'
+    );
+  }
+}
+
+el('start').addEventListener('click', async () => {
+  if (starting || running) return;
+
+  if (!window.isSecureContext ||
+      !navigator.mediaDevices) {
+    status(
+      'Camera access needs HTTPS or localhost ' +
+      'on a computer. Open the published HTTPS page.'
+    );
+    return;
+  }
+
+  starting = true;
+  el('start').disabled = true;
+
+  status(
+    'Allow camera access when your browser asks.'
+  );
+
+  watchdog = setTimeout(() => {
+    if (starting) {
+      fail(new Error('Camera startup timeout'));
+    }
+  }, 45000);
+
+  try {
+    await system.start();
+  } catch (error) {
+    fail(error);
+  }
+});
+
+scene.addEventListener('arReady', () => {
+  clearTimeout(watchdog);
+
+  starting = false;
+  running = true;
+
+  el('intro').classList.add('hidden');
+  el('hud').classList.remove('hidden');
+
+  el('tracking').textContent =
+    'Searching for the sample target card…';
+});
+
+scene.addEventListener('arError', event => {
+  fail(event.detail && event.detail.error);
+});
+
+target.addEventListener('targetFound', () => {
+  found = true;
+
+  el('tracking').textContent = solved
+    ? 'Reward crystal active — keep the card in view.'
+    : 'Target found! Your crystal is active.';
+
+  el('reveal').disabled = solved;
+});
+
+target.addEventListener('targetLost', () => {
+  found = false;
+
+  el('tracking').textContent =
+    'Card out of view. Point back at it ' +
+    'to see the crystal.';
+
+  el('reveal').disabled = true;
+});
+
+el('reveal').addEventListener('click', () => {
+  if (!found || solved) return;
+
+  revealed = true;
+
+  el('scanPanel').classList.add('hidden');
+  el('challenge').classList.remove('hidden');
+
+  el('arTitle').setAttribute(
+    'value',
+    'DECODE THE SIGNAL'
+  );
+});
+
+el('hint').addEventListener('click', () => {
+  el('feedback').textContent =
+    'Q becomes P. B becomes A. ' +
+    'Think of a place with trees.';
+});
+
+el('challenge').addEventListener('submit', event => {
+  event.preventDefault();
+
+  if (!revealed) return;
+
+  const answer = el('answer').value
+    .trim()
+    .toUpperCase();
+
+  if (answer !== 'PARK') {
+    el('feedback').textContent =
+      'Not quite. Move each letter back ONE ' +
+      'place and try again.';
+    return;
+  }
+
+  solved = true;
+
+  el('challenge').classList.add('hidden');
+  el('won').classList.remove('hidden');
+
+  el('crystal').setAttribute('color', '#ffd36d');
+
+  el('crystal').setAttribute(
+    'material',
+    'emissive',
+    '#b66b15'
+  );
+
+  el('arTitle').setAttribute(
+    'value',
+    'CRYSTAL RESTORED - 7'
+  );
+
+  el('rewardStars').setAttribute('visible', true);
+
+  el('tracking').textContent = found
+    ? 'Crystal restored! Your first digit is 7.'
+    : 'Solved! Point back at the card ' +
+      'for the golden crystal.';
+
+  el('celebration').replaceChildren();
+
+  const reducedMotion = matchMedia(
+    '(prefers-reduced-motion: reduce)'
+  ).matches;
+
+  if (!reducedMotion) {
+    for (let i = 0; i < 22; i++) {
+      const star = document.createElement('i');
+
+      star.textContent = '✦';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = '-40px';
+
+      star.style.animationDelay =
+        Math.random() * .8 + 's';
+
+      el('celebration').appendChild(star);
+    }
+
+    setTimeout(() => {
+      el('celebration').replaceChildren();
+    }, 4000);
+  }
+});
+
+el('replay').addEventListener('click', () => {
+  solved = false;
+  revealed = false;
+
+  el('won').classList.add('hidden');
+  el('scanPanel').classList.remove('hidden');
+
+  el('answer').value = '';
+  el('feedback').textContent = '';
+
+  el('crystal').setAttribute('color', '#66deff');
+
+  el('crystal').setAttribute(
+    'material',
+    'emissive',
+    '#174d82'
+  );
+
+  el('arTitle').setAttribute(
+    'value',
+    'SIGNAL FOUND'
+  );
+
+  el('rewardStars').setAttribute('visible', false);
+
+  el('reveal').disabled = !found;
+});
+
+el('stop').addEventListener('click', () => {
+  halt();
+
+  status(
+    'Camera closed. You can start again when ready.'
+  );
+});
+
+window.addEventListener('pagehide', halt);
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && (running || starting)) {
+    halt();
+
+    status(
+      'Camera paused while this tab was in the ' +
+      'background. Tap Start camera to resume.'
+    );
+  }
+});
+</script>
+
+</body>
+</html>
