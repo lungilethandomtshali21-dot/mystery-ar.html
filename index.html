@@ -5,378 +5,342 @@
 <meta name="viewport"
       content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-<title>The Missing December Star | First AR Mission</title>
+<title>The Starkeeper | Find the First Symbol</title>
 
 <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:transparent;
+  color:white;
+  font:16px/1.5 system-ui,sans-serif;
 }
 
-html, body {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  font: 16px/1.5 system-ui, sans-serif;
-  color: white;
-  background: transparent;
+a-scene{
+  position:fixed!important;
+  inset:0;
+  width:100%;
+  height:100%;
 }
 
-a-scene {
-  position: fixed !important;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+.hidden{display:none!important}
+
+button{
+  font:inherit;
+  border:0;
+  border-radius:12px;
+  padding:12px 18px;
+  background:#ffd36d;
+  color:#142239;
+  font-weight:750;
+  cursor:pointer;
 }
 
-button, input {
-  font: inherit;
+button:disabled{
+  opacity:.45;
+  cursor:default;
 }
 
-button, .link {
-  display: inline-block;
-  border: 0;
-  border-radius: 12px;
-  padding: 12px 18px;
-  background: #ffd36d;
-  color: #10152e;
-  font-weight: 750;
-  cursor: pointer;
-  text-decoration: none;
+.secondary{
+  background:#ffffff12;
+  border:1px solid #ffffff40;
+  color:white;
 }
 
-button:disabled {
-  opacity: .45;
-  cursor: default;
-}
-
-.secondary {
-  background: #ffffff15;
-  border: 1px solid #ffffff40;
-  color: white;
-}
-
-.hidden {
-  display: none !important;
-}
-
-.overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 30;
-  overflow: auto;
-  padding: 30px 20px;
-  background: radial-gradient(
-    ellipse at top,
-    #473566,
-    #10152e 75%
+#intro{
+  position:fixed;
+  inset:0;
+  z-index:30;
+  overflow:auto;
+  padding:28px 22px;
+  background:radial-gradient(
+    ellipse at top,#31575f,#122238 75%
   );
-  display: grid;
-  place-items: center;
+  display:grid;
+  place-items:center;
 }
 
-.intro {
-  width: 100%;
-  max-width: 540px;
+.intro-inner{max-width:520px}
+
+.eyebrow{
+  font-size:12px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:#ffd36d;
 }
 
-.eyebrow {
-  font-size: 12px;
-  letter-spacing: 2px;
-  color: #ffd36d;
-  text-transform: uppercase;
+h1{
+  font-size:clamp(40px,10vw,65px);
+  line-height:1.05;
+  letter-spacing:-2px;
+  margin:16px 0;
 }
 
-h1 {
-  font-size: clamp(38px, 9vw, 58px);
-  line-height: 1.05;
-  letter-spacing: -2px;
-  margin: 15px 0;
+h2{
+  font-size:24px;
+  margin:8px 0;
 }
 
-h1 em {
-  color: #ff86ad;
-  font-style: normal;
+p{color:#d7e2e9}
+
+.instructions{
+  padding:18px;
+  background:#ffffff09;
+  border:1px solid #ffffff25;
+  border-radius:15px;
+  margin:20px 0;
 }
 
-p {
-  color: #d2d7ed;
+.instructions ol{padding-left:22px}
+.instructions li{margin:9px 0}
+.note{font-size:13px}
+
+#startStatus{
+  min-height:25px;
+  color:#ffd36d;
 }
 
-.steps {
-  background: #ffffff09;
-  border: 1px solid #ffffff25;
-  border-radius: 16px;
-  padding: 18px;
-  margin: 20px 0;
+.top{
+  position:fixed;
+  z-index:20;
+  left:12px;
+  right:12px;
+  top:max(12px,env(safe-area-inset-top));
+  padding:12px 16px;
+  border-radius:14px;
+  background:#122238ef;
+  border:1px solid #ffffff30;
+  pointer-events:none;
 }
 
-.steps ol {
-  padding-left: 22px;
+.top p{
+  font-size:14px;
+  margin:4px 0;
 }
 
-.steps li {
-  padding-bottom: 8px;
+.panel{
+  position:fixed;
+  z-index:21;
+  left:12px;
+  right:12px;
+  bottom:max(12px,env(safe-area-inset-bottom));
+  padding:18px;
+  border-radius:18px;
+  background:#122238f2;
+  border:1px solid #ffffff30;
+  max-height:58vh;
+  overflow:auto;
 }
 
-.actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+.top,.panel{
+  max-width:600px;
+  margin-inline:auto;
 }
 
-.note {
-  font-size: 13px;
-  color: #bfc8e0;
+.panel p{
+  font-size:14px;
+  margin:8px 0;
 }
 
-.status {
-  min-height: 24px;
-  color: #ffd36d;
+.choices{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin:16px 0;
 }
 
-.top {
-  position: fixed;
-  z-index: 20;
-  top: max(12px, env(safe-area-inset-top));
-  left: 12px;
-  right: 12px;
-  background: #10152eea;
-  border: 1px solid #ffffff30;
-  border-radius: 14px;
-  padding: 12px 15px;
-  pointer-events: none;
+.choice{
+  padding:12px 4px;
+  background:#fff8e8;
+  border:3px solid transparent;
 }
 
-.top strong {
-  font-size: 12px;
-  letter-spacing: 1px;
-  color: #ffd36d;
+.choice svg{
+  width:34px;
+  height:34px;
+  display:block;
+  margin:0 auto 5px;
+  fill:currentColor;
 }
 
-.top p {
-  margin: 3px 0;
-  font-size: 14px;
+.choice span{font-size:13px}
+
+.choice.correct{
+  border-color:#62d9b2;
+  background:#d7fff0;
 }
 
-.bottom {
-  position: fixed;
-  z-index: 21;
-  bottom: max(16px, env(safe-area-inset-bottom));
-  left: 12px;
-  right: 12px;
-  max-height: 64vh;
-  overflow: auto;
-  border: 1px solid #ffffff30;
-  border-radius: 18px;
-  padding: 18px;
-  background: #10152ef2;
+.choice.wrong{border-color:#ff839a}
+
+#feedback{
+  color:#ffd36d;
+  min-height:24px;
 }
 
-.bottom h2 {
-  margin: 4px 0 8px;
-  font-size: 23px;
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:14px;
 }
 
-.bottom p {
-  margin: 7px 0;
-  font-size: 14px;
-}
-
-.code {
-  letter-spacing: 7px;
-  font-weight: 800;
-  font-size: 28px;
-  color: #ffd36d;
-  margin: 12px 0;
-}
-
-input {
-  background: #080e24;
-  border: 1px solid #7b81a2;
-  border-radius: 9px;
-  padding: 12px;
-  color: white;
-  width: 100%;
-  margin: 8px 0 12px;
-}
-
-label {
-  font-size: 13px;
-}
-
-.top, .bottom {
-  max-width: 620px;
-  margin-inline: auto;
-}
-
-#celebration {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 24;
-}
-
-#celebration i {
-  position: absolute;
-  color: #ffd36d;
-  font-size: 25px;
-  animation: fall 2.8s linear forwards;
-}
-
-@keyframes fall {
-  from {
-    transform: translateY(-40px) rotate(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateY(100vh) rotate(330deg);
-    opacity: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  #celebration i {
-    animation: none;
-    display: none;
-  }
+#codeDigit{
+  font-size:32px;
+  font-weight:850;
+  color:#ffd36d;
 }
 </style>
 </head>
 
 <body>
 
-<section id="intro" class="overlay">
-  <div class="intro">
+<section id="intro">
+  <div class="intro-inner">
+
     <div class="eyebrow">
-      Isolo Printx · AR field test 01 · Ages 12+
+      Isolo Printx · Mission 01 · Ages 12+
     </div>
 
-    <h1>
-      The missing<br>
-      <em>December Star.</em>
-    </h1>
+    <h1>The Starkeeper</h1>
 
     <p>
-      Find the crystal. Decode the transmission.
-      Earn your first restoration signal.
+      Someone has hidden a signal in the city.
+      Your first clue is already in her hands.
     </p>
 
-    <div class="steps">
-      <strong>Before you start</strong>
+    <div class="instructions">
+      <strong>Use your new Starkeeper card</strong>
 
       <ol>
         <li>
-          Open the sample target card on a second
-          screen, or print it.
+          Print the exact image you compiled,
+          or display it on another screen.
         </li>
         <li>
           Tap <b>Start camera</b> and allow camera access.
         </li>
         <li>
-          Point at the card, then tap
-          <b>Reveal the clue</b>.
+          Point at the whole card. Once recognised,
+          inspect her notebook and choose its symbol.
         </li>
       </ol>
 
-      <a
-        class="link secondary"
-        target="_blank"
-        rel="noopener"
-        href="https://raw.githubusercontent.com/hiukim/mind-ar-js/master/examples/image-tracking/assets/card-example/card.png">
-        Open sample target ↗
-      </a>
-
       <p class="note">
-        This test recognises the existing MindAR sample
-        card, not the December Star artwork.
-        If viewing the card on this phone, print it
-        or move it to another screen before starting.
+        This version uses your uploaded targets.mind.
+        The old sample card will not work.
       </p>
     </div>
 
-    <div class="actions">
-      <button id="start" disabled>
-        Loading AR engine…
-      </button>
-    </div>
+    <button id="start" disabled>
+      Loading AR engine…
+    </button>
 
-    <p id="startStatus" class="status" role="status">
-      Preparing the camera experience…
+    <p id="startStatus" role="status">
+      Preparing the experience…
     </p>
 
     <p class="note">
-      Use an HTTPS website in Safari or Chrome.
-      Internet is needed for the libraries and target.
+      Use Safari or Chrome over HTTPS.
       This page does not record or upload camera video.
     </p>
+
   </div>
 </section>
 
 <div id="hud" class="hidden">
-  <div class="top">
-    <strong>CASE 001 / CRYSTAL SIGNAL</strong>
 
-    <p id="tracking" role="status" aria-live="polite">
-      Searching for the sample target card…
+  <div class="top">
+    <div class="eyebrow">
+      The missing December Star
+    </div>
+
+    <p
+      id="tracking"
+      role="status"
+      aria-live="polite">
+      Searching for your Starkeeper card…
     </p>
   </div>
 
-  <section class="bottom">
-    <div id="scanPanel">
-      <div class="eyebrow">Find the signal</div>
+  <section class="panel">
 
-      <h2>A crystal is waiting.</h2>
+    <div id="mission">
 
-      <p>
-        Keep the full card in view, in even light.
-        Move slowly until the crystal appears.
-      </p>
-
-      <button id="reveal" disabled>
-        Reveal the clue
-      </button>
-    </div>
-
-    <form id="challenge" class="hidden">
       <div class="eyebrow">
-        Transmission intercepted
+        Find the first symbol
       </div>
 
-      <h2>Where is the next crystal?</h2>
+      <h2>What is on her notebook?</h2>
 
-      <p>
-        Every letter has moved one place forward in
-        the alphabet. Move each letter <b>back one</b>
-        to reveal the destination.
+      <p id="prompt">
+        Scan the card to activate the choices below.
       </p>
 
-      <div class="code">Q B S L</div>
+      <div
+        class="choices"
+        role="group"
+        aria-label="Choose the notebook symbol">
 
-      <label for="answer">Destination</label>
+        <button
+          class="choice"
+          id="star"
+          data-answer="star"
+          disabled>
 
-      <input
-        id="answer"
-        autocomplete="off"
-        autocapitalize="characters"
-        maxlength="30"
-        placeholder="Enter the place">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <path d="
+              M50 2 60 34 84 16 67 41 98 50
+              67 59 84 84 59 67 50 98 41 67
+              16 84 33 59 2 50 33 41 16 16 40 34Z
+            "/>
+          </svg>
 
-      <div class="actions">
-        <button type="submit">
-          Unlock the signal
+          <span>Star</span>
         </button>
 
         <button
-          type="button"
-          id="hint"
-          class="secondary">
-          Hint
+          class="choice"
+          id="key"
+          data-answer="key"
+          disabled>
+
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <path
+              fill-rule="evenodd"
+              d="
+                M64 4a27 27 0 0 0-25 38L5 76l5 18
+                18-1 6-6-1-11 11 1 13-13
+                A27 27 0 1 0 64 4
+                Zm0 14a13 13 0 1 1 0 26
+                13 13 0 0 1 0-26Z
+              "/>
+          </svg>
+
+          <span>Key</span>
         </button>
+
+        <button
+          class="choice"
+          id="lightning"
+          data-answer="lightning"
+          disabled>
+
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <path d="
+              M48 3H86L61 38H85L22 98 39 57H15Z
+            "/>
+          </svg>
+
+          <span>Lightning</span>
+        </button>
+
       </div>
 
       <p
@@ -384,45 +348,58 @@ label {
         role="status"
         aria-live="polite">
       </p>
-    </form>
 
-    <div id="won" class="hidden">
+      <button id="hint" class="secondary" disabled>
+        Give me a hint
+      </button>
+
+    </div>
+
+    <div
+      id="reward"
+      class="hidden"
+      aria-live="polite">
+
       <div class="eyebrow">
-        Crystal 01 restored
+        First signal restored
       </div>
 
-      <h2>You found the signal.</h2>
+      <h2>You found the star.</h2>
 
       <p>
-        The city sends a pulse of light.
-        Your first code digit is
-        <b style="color:#ffd36d;font-size:24px">7</b>.
+        “Good eye, detective. The city has been
+        waiting for someone who notices the small things.”
       </p>
 
       <p>
-        Point back at the card to see your
-        golden reward crystal.
+        Your first code digit is
+        <span id="codeDigit">7</span>.
+      </p>
+
+      <p>
+        Keep the card in view to see the golden
+        crystal and its orbiting lights.
       </p>
 
       <button id="replay">
-        Replay this mission
+        Replay mission
       </button>
+
     </div>
 
-    <div style="margin-top:14px">
+    <div class="actions">
       <button id="stop" class="secondary">
         Close camera
       </button>
     </div>
+
   </section>
 </div>
-
-<div id="celebration" aria-hidden="true"></div>
 
 <a-scene
   id="scene"
   mindar-image="
-    imageTargetSrc: https://raw.githubusercontent.com/hiukim/mind-ar-js/master/examples/image-tracking/assets/card-example/card.mind;
+    imageTargetSrc: ./targets.mind;
     autoStart: false;
     uiLoading: no;
     uiScanning: no;
@@ -447,93 +424,103 @@ label {
     id="target"
     mindar-image-target="targetIndex: 0">
 
-    <a-ring
-      color="#74e9ff"
-      radius-inner="0.31"
-      radius-outer="0.325"
-      side="double"
-      material="shader: flat; opacity: 0.85"
-      position="0 0 0.04"
-      animation="
-        property: rotation;
-        to: 0 0 360;
-        loop: true;
-        dur: 12000;
-        easing: linear">
-    </a-ring>
+    <a-entity position="0 0.12 0.18">
 
-    <a-entity
-      id="crystalRig"
-      position="0 0 0.22"
-      animation="
-        property: position;
-        from: 0 0 0.18;
-        to: 0 0.08 0.30;
-        dir: alternate;
-        loop: true;
-        dur: 1800;
-        easing: easeInOutSine">
+      <a-ring
+        color="#75e8ef"
+        radius-inner="0.22"
+        radius-outer="0.23"
+        side="double"
+        material="shader: flat; opacity: .8"
+        position="0 0 0.01">
+      </a-ring>
 
-      <a-octahedron
-        id="crystal"
-        radius="0.22"
-        scale="0.8 1.4 0.8"
-        color="#66deff"
-        material="
-          metalness: 0.2;
-          roughness: 0.25;
-          emissive: #174d82;
-          emissiveIntensity: 0.8
-        "
+      <a-entity
         animation="
-          property: rotation;
-          to: 0 360 0;
-          loop: true;
-          dur: 6500;
-          easing: linear">
-      </a-octahedron>
-
-      <a-octahedron
-        radius="0.255"
-        scale="0.8 1.4 0.8"
-        material="
-          color: #b8f3ff;
-          wireframe: true;
-          shader: flat
-        "
-        animation="
-          property: rotation;
-          to: 0 -360 0;
-          loop: true;
-          dur: 10000;
-          easing: linear">
-      </a-octahedron>
-    </a-entity>
-
-    <a-text
-      id="arTitle"
-      value="SIGNAL FOUND"
-      align="center"
-      color="#ffffff"
-      width="1.6"
-      position="0 -0.40 0.08">
-    </a-text>
-
-    <a-entity id="rewardStars" visible="false">
-      <a-text
-        value="*   *   *"
-        align="center"
-        color="#ffd36d"
-        width="2.8"
-        position="0 0.42 0.10"
-        animation="
-          property: scale;
-          from: 0.8 0.8 0.8;
-          to: 1.15 1.15 1.15;
+          property: position;
+          from: 0 -0.025 0;
+          to: 0 0.035 0;
           dir: alternate;
           loop: true;
-          dur: 800">
+          dur: 1800;
+          easing: easeInOutSine">
+
+        <a-octahedron
+          id="crystal"
+          radius="0.15"
+          scale=".75 1.4 .75"
+          color="#66deff"
+          material="
+            metalness: .2;
+            roughness: .3;
+            emissive: #174d82;
+            emissiveIntensity: .8
+          "
+          animation="
+            property: rotation;
+            to: 0 360 0;
+            loop: true;
+            dur: 6500;
+            easing: linear">
+        </a-octahedron>
+
+        <a-octahedron
+          radius="0.175"
+          scale=".75 1.4 .75"
+          material="
+            color: #b8f3ff;
+            wireframe: true;
+            shader: flat
+          "
+          animation="
+            property: rotation;
+            to: 0 -360 0;
+            loop: true;
+            dur: 10000;
+            easing: linear">
+        </a-octahedron>
+
+      </a-entity>
+
+      <a-entity
+        id="orbit"
+        visible="false"
+        animation="
+          property: rotation;
+          to: 0 0 360;
+          loop: true;
+          dur: 4000;
+          easing: linear">
+
+        <a-sphere
+          radius=".025"
+          position=".26 0 .08"
+          material="shader: flat; color: #ffd36d">
+        </a-sphere>
+
+        <a-sphere
+          radius=".02"
+          position="-.13 .225 .08"
+          material="shader: flat; color: #fff3b0">
+        </a-sphere>
+
+        <a-sphere
+          radius=".025"
+          position="-.13 -.225 .08"
+          material="shader: flat; color: #ffd36d">
+        </a-sphere>
+
+      </a-entity>
+
+      <a-text
+        id="arTitle"
+        value="SIGNAL FOUND"
+        align="center"
+        color="#ffffff"
+        width="1.25"
+        position="0 -.31 .04">
       </a-text>
+
     </a-entity>
   </a-entity>
 
@@ -545,26 +532,38 @@ label {
     light="type: directional; intensity: 1.6"
     position="1 1 2">
   </a-entity>
+
 </a-scene>
 
 <script>
 'use strict';
 
-const el = id => document.getElementById(id);
+const $ = id => document.getElementById(id);
 
-const scene = el('scene');
-const target = el('target');
+const scene = $('scene');
 
-let running = false;
+const choices = [
+  ...document.querySelectorAll('[data-answer]')
+];
+
+let system;
 let starting = false;
+let running = false;
 let found = false;
+let scanned = false;
 let solved = false;
-let revealed = false;
-let system = null;
-let watchdog = null;
+let watchdog;
 
 function status(text) {
-  el('startStatus').textContent = text;
+  $('startStatus').textContent = text;
+}
+
+function syncChoices() {
+  choices.forEach(button => {
+    button.disabled = !scanned || solved;
+  });
+
+  $('hint').disabled = !scanned || solved;
 }
 
 function ready() {
@@ -573,18 +572,18 @@ function ready() {
 
   if (!system) {
     status(
-      'AR engine could not load. Check your ' +
-      'internet connection and reload.'
+      'AR engine did not load. ' +
+      'Check your internet and reload.'
     );
     return;
   }
 
-  el('start').disabled = false;
-  el('start').textContent = 'Start camera';
+  $('start').disabled = false;
+  $('start').textContent = 'Start camera';
 
   status(
-    'Ready. Open the target on another screen ' +
-    'or print it.'
+    'Ready. Have your Starkeeper card ' +
+    'on another screen or printed.'
   );
 }
 
@@ -599,26 +598,24 @@ if (scene.hasLoaded) {
 setTimeout(() => {
   if (!system) {
     status(
-      'Still loading. Check that your connection ' +
-      'allows A-Frame and MindAR, then reload.'
+      'Still loading. Check your internet ' +
+      'connection and reload.'
     );
   }
 }, 20000);
 
-function halt() {
+function closeCamera() {
   clearTimeout(watchdog);
 
   running = false;
   starting = false;
   found = false;
 
-  el('reveal').disabled = true;
-
   if (system) {
     try {
       system.stop();
     } catch (error) {
-      console.warn('Camera shutdown:', error);
+      console.warn(error);
     }
   }
 
@@ -632,235 +629,233 @@ function halt() {
     }
   });
 
-  el('hud').classList.add('hidden');
-  el('intro').classList.remove('hidden');
+  $('hud').classList.add('hidden');
+  $('intro').classList.remove('hidden');
 
-  el('start').disabled = !system;
-  el('start').textContent = 'Start camera';
+  $('start').disabled = !system;
+  $('start').textContent = 'Start camera';
 }
 
 function fail(error) {
-  halt();
+  closeCamera();
 
-  const name = error && error.name;
-
-  if (name === 'NotAllowedError') {
-    status(
-      'Camera permission was denied. Allow it ' +
-      'in your browser settings and try again.'
-    );
-  } else if (name === 'NotFoundError') {
-    status('No camera was found on this device.');
-  } else {
-    status(
-      'Camera or tracking could not start. ' +
-      'Use HTTPS in Safari or Chrome, check ' +
-      'permissions and your internet, then retry.'
-    );
-  }
+  status(
+    error && error.name === 'NotAllowedError'
+      ? 'Camera permission was denied. Allow it ' +
+        'in Safari or Chrome settings, then retry.'
+      : 'Could not start AR. Check camera permissions, ' +
+        'internet and that targets.mind is beside ' +
+        'this HTML file.'
+  );
 }
 
-el('start').addEventListener('click', async () => {
-  if (starting || running) return;
+$('start').addEventListener('click', async () => {
+  if (starting || running || !system) return;
 
   if (!window.isSecureContext ||
       !navigator.mediaDevices) {
     status(
-      'Camera access needs HTTPS or localhost ' +
-      'on a computer. Open the published HTTPS page.'
+      'Open the published HTTPS page ' +
+      'in Safari or Chrome.'
     );
     return;
   }
 
   starting = true;
-  el('start').disabled = true;
+  $('start').disabled = true;
 
-  status(
-    'Allow camera access when your browser asks.'
-  );
+  status('Checking your recognition file…');
 
   watchdog = setTimeout(() => {
     if (starting) {
-      fail(new Error('Camera startup timeout'));
+      fail(new Error('Startup timeout'));
     }
-  }, 45000);
+  }, 60000);
 
   try {
+    const response = await fetch('./targets.mind', {
+      cache: 'no-store'
+    });
+
+    if (!starting) return;
+
+    if (!response.ok) {
+      throw new Error('targets.mind not found');
+    }
+
+    const type =
+      response.headers.get('content-type') || '';
+
+    if (type.includes('text/html')) {
+      throw new Error(
+        'Recognition file is an HTML page'
+      );
+    }
+
+    status('Allow camera access when prompted.');
+
     await system.start();
+
   } catch (error) {
-    fail(error);
+    if (starting || running) {
+      fail(error);
+    }
   }
 });
 
 scene.addEventListener('arReady', () => {
+  if (!starting) {
+    if (system) system.stop();
+    return;
+  }
+
   clearTimeout(watchdog);
 
   starting = false;
   running = true;
 
-  el('intro').classList.add('hidden');
-  el('hud').classList.remove('hidden');
+  $('intro').classList.add('hidden');
+  $('hud').classList.remove('hidden');
 
-  el('tracking').textContent =
-    'Searching for the sample target card…';
+  $('tracking').textContent =
+    'Searching for your Starkeeper card…';
 });
 
 scene.addEventListener('arError', event => {
-  fail(event.detail && event.detail.error);
+  if (starting || running) {
+    fail(event.detail && event.detail.error);
+  }
 });
 
-target.addEventListener('targetFound', () => {
+$('target').addEventListener('targetFound', () => {
   found = true;
+  scanned = true;
 
-  el('tracking').textContent = solved
-    ? 'Reward crystal active — keep the card in view.'
-    : 'Target found! Your crystal is active.';
+  $('tracking').textContent = solved
+    ? 'Golden crystal active. Keep the card in view.'
+    : 'Starkeeper recognised! Inspect her notebook.';
 
-  el('reveal').disabled = solved;
+  $('prompt').textContent =
+    'Choose the symbol printed on her notebook. ' +
+    'You can lower the phone to answer.';
+
+  syncChoices();
 });
 
-target.addEventListener('targetLost', () => {
+$('target').addEventListener('targetLost', () => {
   found = false;
 
-  el('tracking').textContent =
+  $('tracking').textContent =
     'Card out of view. Point back at it ' +
-    'to see the crystal.';
-
-  el('reveal').disabled = true;
+    'to see the animation.';
 });
 
-el('reveal').addEventListener('click', () => {
-  if (!found || solved) return;
+choices.forEach(button => {
+  button.addEventListener('click', () => {
+    if (!scanned || solved) return;
 
-  revealed = true;
+    choices.forEach(item => {
+      item.classList.remove('wrong');
+    });
 
-  el('scanPanel').classList.add('hidden');
-  el('challenge').classList.remove('hidden');
+    if (button.dataset.answer !== 'star') {
+      button.classList.add('wrong');
 
-  el('arTitle').setAttribute(
-    'value',
-    'DECODE THE SIGNAL'
-  );
-});
+      $('feedback').textContent =
+        'Look closely at the notebook cover, ' +
+        'rather than the crystal.';
 
-el('hint').addEventListener('click', () => {
-  el('feedback').textContent =
-    'Q becomes P. B becomes A. ' +
-    'Think of a place with trees.';
-});
-
-el('challenge').addEventListener('submit', event => {
-  event.preventDefault();
-
-  if (!revealed) return;
-
-  const answer = el('answer').value
-    .trim()
-    .toUpperCase();
-
-  if (answer !== 'PARK') {
-    el('feedback').textContent =
-      'Not quite. Move each letter back ONE ' +
-      'place and try again.';
-    return;
-  }
-
-  solved = true;
-
-  el('challenge').classList.add('hidden');
-  el('won').classList.remove('hidden');
-
-  el('crystal').setAttribute('color', '#ffd36d');
-
-  el('crystal').setAttribute(
-    'material',
-    'emissive',
-    '#b66b15'
-  );
-
-  el('arTitle').setAttribute(
-    'value',
-    'CRYSTAL RESTORED - 7'
-  );
-
-  el('rewardStars').setAttribute('visible', true);
-
-  el('tracking').textContent = found
-    ? 'Crystal restored! Your first digit is 7.'
-    : 'Solved! Point back at the card ' +
-      'for the golden crystal.';
-
-  el('celebration').replaceChildren();
-
-  const reducedMotion = matchMedia(
-    '(prefers-reduced-motion: reduce)'
-  ).matches;
-
-  if (!reducedMotion) {
-    for (let i = 0; i < 22; i++) {
-      const star = document.createElement('i');
-
-      star.textContent = '✦';
-      star.style.left = Math.random() * 100 + '%';
-      star.style.top = '-40px';
-
-      star.style.animationDelay =
-        Math.random() * .8 + 's';
-
-      el('celebration').appendChild(star);
+      return;
     }
 
-    setTimeout(() => {
-      el('celebration').replaceChildren();
-    }, 4000);
-  }
+    solved = true;
+
+    button.classList.add('correct');
+
+    syncChoices();
+
+    $('mission').classList.add('hidden');
+    $('reward').classList.remove('hidden');
+
+    $('crystal').setAttribute('color', '#ffd36d');
+
+    $('crystal').setAttribute(
+      'material',
+      'emissive',
+      '#b66b15'
+    );
+
+    $('orbit').setAttribute('visible', true);
+
+    $('arTitle').setAttribute(
+      'value',
+      'STAR RESTORED - 7'
+    );
+
+    $('tracking').textContent = found
+      ? 'First signal restored! Your code digit is 7.'
+      : 'Solved! Point back at the card ' +
+        'for your reward animation.';
+  });
 });
 
-el('replay').addEventListener('click', () => {
+$('hint').addEventListener('click', () => {
+  $('feedback').textContent =
+    'Find the gold shape on the dark notebook ' +
+    'cover. Which choice matches it?';
+});
+
+$('replay').addEventListener('click', () => {
   solved = false;
-  revealed = false;
+  scanned = found;
 
-  el('won').classList.add('hidden');
-  el('scanPanel').classList.remove('hidden');
+  choices.forEach(button => {
+    button.classList.remove('correct', 'wrong');
+  });
 
-  el('answer').value = '';
-  el('feedback').textContent = '';
+  $('reward').classList.add('hidden');
+  $('mission').classList.remove('hidden');
 
-  el('crystal').setAttribute('color', '#66deff');
+  $('feedback').textContent = '';
 
-  el('crystal').setAttribute(
+  $('prompt').textContent = scanned
+    ? 'Choose the symbol printed on her notebook.'
+    : 'Scan the card to activate the choices below.';
+
+  $('crystal').setAttribute('color', '#66deff');
+
+  $('crystal').setAttribute(
     'material',
     'emissive',
     '#174d82'
   );
 
-  el('arTitle').setAttribute(
+  $('orbit').setAttribute('visible', false);
+
+  $('arTitle').setAttribute(
     'value',
     'SIGNAL FOUND'
   );
 
-  el('rewardStars').setAttribute('visible', false);
-
-  el('reveal').disabled = !found;
+  syncChoices();
 });
 
-el('stop').addEventListener('click', () => {
-  halt();
+$('stop').addEventListener('click', () => {
+  closeCamera();
 
   status(
-    'Camera closed. You can start again when ready.'
+    'Camera closed. Tap Start camera when ready.'
   );
 });
 
-window.addEventListener('pagehide', halt);
+window.addEventListener('pagehide', closeCamera);
 
 document.addEventListener('visibilitychange', () => {
   if (document.hidden && (running || starting)) {
-    halt();
+    closeCamera();
 
     status(
-      'Camera paused while this tab was in the ' +
-      'background. Tap Start camera to resume.'
+      'Camera paused. Tap Start camera to resume.'
     );
   }
 });
